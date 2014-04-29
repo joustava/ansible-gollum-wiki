@@ -1,0 +1,6 @@
+- name: Wiki setup
+  hosts: all
+  sudo: yes
+  roles:
+    - common
+    - nginx
