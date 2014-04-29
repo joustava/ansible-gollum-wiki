@@ -1,0 +1,7 @@
+- name: Install updates
+  apt: upgrade=dist update_cache=yes
+
+- name: Install essintial packages
+  apt: pkg="{{ item }}" state=latest
+  with_items:
+    - tmux
