@@ -4,4 +4,9 @@
 - name: Install essintial packages
   apt: pkg="{{ item }}" state=latest
   with_items:
-    - tmux
+    - screen
+    - vim
+    - curl
+    - bash
+    - git-core
+    - build-essential
