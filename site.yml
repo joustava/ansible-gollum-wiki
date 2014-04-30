@@ -1,6 +1,12 @@
 - name: Wiki setup
   hosts: all
   sudo: yes
+  vars:
+    wiki_user: vagrant
+    wiki_dir: "/home/{{ wiki_user }}/wiki_pages"
+    wiki_base: wiki
+    wiki_hostname: wiki.virtusize.com
   roles:
     - common
     - nginx
+    - gollum-wiki
