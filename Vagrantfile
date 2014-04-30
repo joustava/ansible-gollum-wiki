@@ -36,5 +36,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "site.yml"
+    ansible.extra_vars = {
+      nginx_port_fwd: 8080
+    }
+
   end
 end
