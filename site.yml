@@ -5,7 +5,7 @@
     wiki_user: vagrant
     wiki_dir: "/home/{{ wiki_user }}/wiki_pages"
     wiki_base: wiki
-    wiki_hostname: wiki.virtusize.com
+    wiki_hostname: wiki.local
   roles:
     - common
     - nginx
