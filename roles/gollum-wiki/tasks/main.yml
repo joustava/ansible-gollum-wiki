@@ -1,0 +1,52 @@
+
+- name: Remove outdated rvm
+  apt: pkg="{{ item }}" state=absent
+  with_items:
+    - ruby-rvm
+
+- name: Install required libraries
+  apt: pkg="{{ item }}" state=latest
+  with_items:
+    - libicu-dev
+    - libxslt1-dev
+    - libxml2-dev
+
+- name: Install rvm, ruby and all the stuff
+  shell: curl -sSL https://get.rvm.io | bash -s stable --ruby=ruby-1.9.3 --gems=gollum
+  sudo: yes
+  sudo_user: "{{ wiki_user }}"
+
+- name: Create a directory for wiki
+  file: path="{{ wiki_dir }}"
+       state=directory
+  sudo: yes
+  sudo_user: "{{ wiki_user }}"
+
+- name: Prepare GIT repository
+  shell: chdir="{{ wiki_dir }}" git init
+  sudo: yes
+  sudo_user: "{{ wiki_user }}"
+  notify: restart gollum
+
+- name: Template upstart configuration
+  template: src=upstart.j2
+            dest=/etc/init/gollum.conf
+            owner=root group=root mode=0640 backup=yes
+  notify: restart gollum
+
+- name: template nginx config
+  template: >
+    src=nginx.j2
+    dest=/etc/nginx/sites-available/wiki.conf
+    backup=yes
+  notify: reload nginx
+
+- name: enable site in nginx
+  file: >
+    src=/etc/nginx/sites-available/wiki.conf
+    dest=/etc/nginx/sites-enabled/wiki.conf
+    state=link
+  notify: reload nginx
+
+# TODO: fix this
+- service: name=gollum state=restarted
